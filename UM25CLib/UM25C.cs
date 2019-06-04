@@ -120,68 +120,116 @@ namespace UM25C
         #endregion
 
         #region Commands
-        //# Commands to send:
-        //F0 - Request new data dump; this triggers a 130-byte response
-        //F1 - (device control) Go to next screen
-        //F2 - (device control) Rotate screen
-        //F3 - (device control) Switch to next data group
-        //F4 - (device control) Clear data group
+
+        /// <summary>
+        /// Request new data dump, return 130b rsponse
+        /// </summary>
+        public const byte GET_DATA_DUMP = 0xF0;
+        /// <summary>
+        /// Switch to next screen
+        /// </summary>
+        public const byte NEXT_SCREEN = 0xF1;
+        /// <summary>
+        /// Rotate screen
+        /// </summary>
+        public const byte ROTATE_SCREEN = 0xF2;
+        /// <summary>
+        /// Switch to next data group
+        /// </summary>
+        public const byte NEXT_DATA_GROUP = 0xF3;
+        /// <summary>
+        /// Clear current data group
+        /// </summary>
+        public const byte CLEAR_DATA_GROUP = 0xF4;
+
+        //TODO
         //Bx - (configuration) Set recording threshold to a value between 0.00 and 0.15 A(where 'x' in the byte is 4 bits representing the value after the decimal point, eg.B7 to set it to 0.07 A)
         //Cx - (configuration) Same as Bx, but for when you want to set it to a value between 0.16 and 0.30 A(16 subtracted from the value behind the decimal point, eg. 0.19 A == C3)
         //Dx - (configuration) Set device backlight level; 'x' must be between 0 and 5 (inclusive)
         //Ex - (configuration) Set screen timeout('screensaver'); 'x' is in minutes and must be between 0 and 9 (inclusive), where 0 disables the screensaver
-        public const byte GET_DATA_DUMP = 0xF0;
-        public const byte NEXT_SCREEN = 0xF1;
-        public const byte ROTATE_SCREEN = 0xF2;
-        public const byte NEXT_DATA_GROUP = 0xF3;
-        public const byte CLEAR_DATA_GROUP = 0xF4;
         #endregion
 
         #region DataDump response indexes
         //# Response format:
         //All byte offsets are in decimal, and inclusive.All values are big-endian and unsigned.
-        //0   - 1   Start marker (always 0x0963)
-        //2   - 3   Voltage(in mV, divide by 1000 to get V)
-        //4   - 5   Amperage(in mA, divide by 1000 to get A)
-        //6   - 9   Wattage(in mW, divide by 1000 to get W)
-        //10  - 11  Temperature(in celsius)
-        //12  - 13  Temperature(in fahrenheit)
+        //0   - 1   Start marker (always 0x0963)     
         //14        Unknown(not used in app)
         //15        Currently selected data group
         //16  - 95  Array of main capacity data groups(where the first one, group 0, is the ephemeral one)
         //            -- for each data group: 4 bytes mAh, 4 bytes mWh
-        //96  - 97  USB data line voltage(positive) in centivolts(divide by 100 to get V)
-        //98  - 99  USB data line voltage(negative) in centivolts(divide by 100 to get V)
         //100       Charging mode; this is an enum, where 0 = unknown/standard, 1 = QC2.0, and presumably 2 = QC3.0 (but I haven't verified this)
-        //101       Unknown(not used in app)
-        //102 - 105 mAh from threshold-based recording
-        //106 - 109 mWh from threshold-based recording
-        //110 - 111 Currently configured threshold for recording
-        //112 - 115 Duration of recording, in seconds since start
-        //116       Recording active(1 if recording)
-        //117       Unknown(not used in app)
-        //118 - 119 Current screen timeout setting
-        //120 - 121 Current backlight setting
-        //122 - 125 Resistance in deci-ohms(divide by 10 to get ohms)
+        //101       Unknown(not used in app)    
+        //117       Unknown(not used in app)     
         //126       Unknown
-        //127       Current screen(same order as on device)
         //128 - 129 Stop marker(always 0xfff1)
+
+        /// <summary>
+        /// Byte offset in 130b response to get Voltage
+        /// </summary>
         public const int INDEX_VOLTAGE = 2;
+        /// <summary>
+        /// Byte offset in 130b response to get Current
+        /// </summary>
         public const int INDEX_CURRENT = 4;
+        /// <summary>
+        /// Byte offset in 130b response to get Power
+        /// </summary>
         public const int INDEX_POWER = 6;
+        /// <summary>
+        /// Byte offset in 130b response to get Temperature in °C
+        /// </summary>
         public const int INDEX_TEMPERATURE_C = 10;
+        /// <summary>
+        /// Byte offset in 130b response to get Temperature in F
+        /// </summary>
         public const int INDEX_TEMPERATURE_F = 12;
+        /// <summary>
+        /// Byte offset in 130b response to get Voltage on positive USB data line
+        /// </summary>
         public const int INDEX_USB_DATALINE_VOLTAGE_POSITIVE = 96;
+        /// <summary>
+        /// Byte offset in 130b response to get Voltage on negative USB data line
+        /// </summary>
         public const int INDEX_USB_DATALINE_VOLTAGE_NEGATIVE = 98;
+        /// <summary>
+        /// Charging mode
+        /// </summary>
         public const int INDEX_CHARGING_MODE = 100;
+        /// <summary>
+        /// Byte offset in 130b response to get Capacity record
+        /// </summary>
         public const int INDEX_CAPACITY_RECORD = 102;
+        /// <summary>
+        /// Byte offset in 130b response to get Enery record
+        /// </summary>
         public const int INDEX_ENERGY_RECORD = 106;
+        /// <summary>
+        /// Byte offset in 130b response to get Stop current for recording
+        /// </summary>
         public const int INDEX_RECORDING_STOP_CURRENT = 110;
+        /// <summary>
+        /// Byte offset in 130b response to getduration of recording in seconds
+        /// </summary>
         public const int INDEX_RECORDING_SECONDS = 112;
+        /// <summary>
+        /// Byte offset in 130b response to get if the recording is active
+        /// </summary>
         public const int INDEX_RECORDING_ACTIVE = 116;
+        /// <summary>
+        /// Byte offset in 130b response to get screen timeout in minutes
+        /// </summary>
         public const int INDEX_SCREEN_TIMEOUT_MINUTES = 118;
+        /// <summary>
+        /// Byte offset in 130b response to get backlight intensity of screen
+        /// </summary>
         public const int INDEX_SCREEN_BACKLIGHT = 120;
+        /// <summary>
+        /// Byte offset in 130b response to get Impedance in Ohms
+        /// </summary>
         public const int INDEX_IMPEDANCE = 122;
+        /// <summary>
+        /// Byte offset in 130b response to get number of current screen 0-5
+        /// </summary>
         public const int INDEX_CURRENT_SCREEN = 127;
 
         #endregion
@@ -255,7 +303,7 @@ namespace UM25C
         /// Reads DataDump (130B) from device
         /// </summary>
         /// <returns>ok/nok</returns>
-        public bool ReadData()
+        public bool ReadDataDump()
         {
             bool ret = false;
             if (SendCommand(new byte[1] { GET_DATA_DUMP }))
@@ -312,7 +360,7 @@ namespace UM25C
             string ret = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + (LogDataToDataSet ? $"\tLogging ENABLED keeping: {KeepRowsInDataSets} rows" : "Logging DISABLED") + Environment.NewLine + Environment.NewLine;
             foreach (KeyValuePair<string, object> k in this.DictAllValues)
             {
-                ret += k.Key.PadRight(100, ' ') + "" + k.Value + Environment.NewLine;
+                ret += k.Key.PadRight(50, ' ') + "" + k.Value + Environment.NewLine;
             }
             return ret;
         }

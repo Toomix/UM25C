@@ -31,7 +31,7 @@ namespace UM25C_Win
 
             this.Text = "UM25C Reader " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
-            if (um25c.ReadData())
+            if (um25c.ReadDataDump())
             {
                 this.lblVoltage.Text = um25c.Voltage + "V";
                 this.lblCurrent.Text = um25c.Current + "A";

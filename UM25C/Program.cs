@@ -19,7 +19,7 @@ namespace UM25C
 
             while (true)
             {
-                if (um25c.ReadData())
+                if (um25c.ReadDataDump())
                 {
                     Console.Clear();
                     Console.Write(um25c.GetDataDump());

@@ -114,7 +114,7 @@ namespace UM25C
         /// </summary>
         public byte CurrentScreen { get; private set; }
         /// <summary>
-        /// Dicstionary with all measured values
+        /// Dictionary with all measured values
         /// </summary>
         public Dictionary<string, object> DictAllValues;
         #endregion
@@ -281,20 +281,6 @@ namespace UM25C
 
             DictAllValues = new Dictionary<string, object>();
             this.dtsData = new System.Data.DataSet();
-            System.Data.DataTable t = new System.Data.DataTable();
-            t.Columns.Add(new System.Data.DataColumn("Time", typeof(DateTime)));
-            t.Columns.Add(new System.Data.DataColumn("Value", typeof(double)));
-
-            var tblVoltage = t.Clone();
-            tblVoltage.TableName = "Voltage";
-
-            var tblCurrent = t.Clone();
-            tblCurrent.TableName = "Current";
-
-            var tblTemperature = t.Clone();
-            tblTemperature.TableName = "Power";
-
-            this.dtsData.Tables.AddRange(new System.Data.DataTable[] { tblVoltage, tblCurrent, tblTemperature });
         }
         #endregion
 
@@ -419,6 +405,17 @@ namespace UM25C
         /// <param name="Value">Value to add to datatable</param>
         private void AddToDataTable(string TableName, object Value)
         {
+            if (!this.dtsData.Tables.Contains(TableName))
+            {
+                System.Data.DataTable t = new System.Data.DataTable
+                {
+                    TableName = TableName
+                };
+                t.Columns.Add(new System.Data.DataColumn("Time", typeof(DateTime)));
+                t.Columns.Add(new System.Data.DataColumn("Value", typeof(double)));
+                this.dtsData.Tables.Add(t);
+            }
+
             if (this.dtsData.Tables[TableName].Rows.Count > KeepRowsInDataSets)
             {
                 this.dtsData.Tables[TableName].Rows.RemoveAt(0);

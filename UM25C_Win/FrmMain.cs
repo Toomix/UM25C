@@ -29,6 +29,13 @@ namespace UM25C_Win
         {
             timer.Stop();
 
+            if (this.chartVoltage.DataSource == null)
+                this.chartVoltage.DataSource = um25c.dtsData.Tables["Voltage"];
+            if (this.chartCurrent.DataSource == null)
+                this.chartCurrent.DataSource = um25c.dtsData.Tables["Current"];
+            if (this.chartPower.DataSource == null)
+                this.chartPower.DataSource = um25c.dtsData.Tables["Power"];
+
             this.Text = "UM25C Reader " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
             if (um25c.ReadDataDump())
@@ -58,9 +65,6 @@ namespace UM25C_Win
             {
                 LogDataToDataSet = true
             };
-            this.chartVoltage.DataSource = um25c.dtsData.Tables["Voltage"];
-            this.chartCurrent.DataSource = um25c.dtsData.Tables["Current"];
-            this.chartPower.DataSource = um25c.dtsData.Tables["Power"];
             this.timer.Start();
         }
     }

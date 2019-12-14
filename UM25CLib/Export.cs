@@ -56,8 +56,6 @@ namespace UM25CLib
             try
             {
                 StringBuilder sb = new StringBuilder();
-
-
                 if (firstRowColumnNames)
                 {
                     IEnumerable<string> columnNames = dt.Columns.Cast<DataColumn>().Select(column => column.ColumnName);

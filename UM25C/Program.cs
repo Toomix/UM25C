@@ -24,10 +24,15 @@ namespace UM25C
                     Console.Clear();
                     Console.Write(um25c.GetDataDump());
                 }
+                else
+                {
+                    Console.WriteLine(um25c.LastError);
+                }
 
                 System.Threading.Thread.Sleep(1000);
             }
         }
-
+        
     }
+    
 }

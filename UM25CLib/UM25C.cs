@@ -299,12 +299,11 @@ namespace UM25C
                 {
                     if (writeD > DateTime.Now)
                     {
-                        this.LastException = new TimeoutException("Response timeout!");
+                        this.LastException = new TimeoutException($"Response timeout! Received {recvData.Length} bytes instead of 130 bytes");
                         recvData = string.Empty;
                         break;
                     }
                 }
-
                 if (ParseData(Encoding.ASCII.GetBytes(recvData)))
                 {
                     ret = true;
@@ -499,10 +498,19 @@ namespace UM25C
         /// <param name="e">arguments</param>
         private void Serial_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            if (this.serial.BytesToRead > 0)
+            switch (e.EventType)
             {
-                recvData += this.serial.ReadExisting();
-            }
+                case SerialData.Chars:
+                    if (this.serial.BytesToRead > 0)
+                    {
+                        recvData += this.serial.ReadExisting();
+                    }
+                    break;
+                case SerialData.Eof:
+                    break;
+                default:
+                    break;
+            }         
         }
         #endregion
 

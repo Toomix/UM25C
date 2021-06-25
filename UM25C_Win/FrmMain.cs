@@ -22,7 +22,9 @@ namespace UM25C_Win
         {
             this.cbCOM.Items.AddRange(System.IO.Ports.SerialPort.GetPortNames());
             if (this.cbCOM.Items.Count > 0)
-                this.cbCOM.Text = "COM35";
+            {
+                this.cbCOM.SelectedIndex = 0;
+            }
         }
 
         private void Timer_Tick(object sender, EventArgs e)

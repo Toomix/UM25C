@@ -10,26 +10,32 @@ namespace UM25C
     {
         static void Main(string[] args)
         {
-
-            UM25C um25c = new UM25C("COM35")
+            if (args.Length > 0)
             {
-                LogDataToDataSet = true,
-                KeepRowsInDataSets = 300,
-            };
+                UM25C um25c = new UM25C(args[0])
+                {
+                    LogDataToDataSet = true,
+                    KeepRowsInDataSets = 300,
+                };
 
-            while (true)
+                while (true)
+                {
+                    if (um25c.ReadDataDump())
+                    {
+                        Console.Clear();
+                        Console.Write(um25c.GetDataDump());
+                    }
+                    else
+                    {
+                        Console.WriteLine(um25c.LastError);
+                    }
+
+                    System.Threading.Thread.Sleep(1000);
+                }
+            }
+            else
             {
-                if (um25c.ReadDataDump())
-                {
-                    Console.Clear();
-                    Console.Write(um25c.GetDataDump());
-                }
-                else
-                {
-                    Console.WriteLine(um25c.LastError);
-                }
-
-                System.Threading.Thread.Sleep(1000);
+                Console.WriteLine("Please specify COM port in argument.");
             }
         }
         
